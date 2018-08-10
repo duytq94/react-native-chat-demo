@@ -11,7 +11,8 @@ export default class SettingsScreen extends Component {
     super(props)
     this.state = {
       avatarSource: '',
-      username: ''
+      username: '',
+      avatarFile: undefined
     }
   }
 
@@ -25,24 +26,37 @@ export default class SettingsScreen extends Component {
     }
 
     ImagePicker.showImagePicker(options, response => {
-
       if (response.didCancel) {
         console.log('User cancelled image picker')
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error)
       } else {
-        let source = {uri: response.uri}
+        const source = {uri: response.uri}
+        const file = new File()
+        file.append('file', {
+          name: 'abc',
+          uri: response.uri,
+          type: response.type
+        })
 
-        this.setState({avatarSource: source})
+        this.setState({
+          avatarSource: source,
+          avatarFile: file
+        })
       }
     })
   }
 
   onBtnUpdatePress = () => {
-    sendBird.updateCurrentUserInfoWithProfileImage(this.state.username, this.state.avatarSource,
-      function (response, error) {
-        console.log(response, error)
-      })
+    if (this.state.avatarFile) {
+
+      sendBird.updateCurrentUserInfoWithProfileImage(this.state.username, this.state.avatarFile,
+        function (response, error) {
+          console.log(response, error.message)
+        })
+    } else {
+
+    }
   }
 
   onBtnLogOutPress = () => {
