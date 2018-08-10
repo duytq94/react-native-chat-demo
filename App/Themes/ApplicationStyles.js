@@ -53,7 +53,7 @@ const ApplicationStyles = {
       backgroundColor: '#f5a623'
     },
     titleToolbar: {
-      color: 'white',
+      color: '#203152',
       fontWeight: 'bold',
       fontSize: 18,
       alignSelf: 'center',

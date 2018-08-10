@@ -18,11 +18,20 @@ export default StyleSheet.create({
   },
   textInput: {
     marginLeft: 10,
-    marginRight: 10
+    marginRight: 25
   },
   viewItemInput: {
     marginTop: 10,
     marginBottom: 10
+  },
+  viewClear: {
+    position: 'absolute',
+    right: 10,
+    top: 35
+  },
+  icClear: {
+    width: 20,
+    height: 20,
   },
   viewBreakLine: {
     width: '90%',

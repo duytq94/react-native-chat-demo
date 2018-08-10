@@ -12,7 +12,13 @@ const images = {
   chevronRight: require('../Images/Icons/chevron-right.png'),
   hamburger: require('../Images/Icons/hamburger.png'),
   backButton: require('../Images/Icons/back-button.png'),
-  closeButton: require('../Images/Icons/close-button.png')
+  closeButton: require('../Images/Icons/close-button.png'),
+
+  ic_clear: require('../Images/ic_clear.png'),
+  ic_list_active: require('../Images/ic_list_active.png'),
+  ic_list_passive: require('../Images/ic_list_passive.png'),
+  ic_setting_active: require('../Images/ic_setting_active.png'),
+  ic_setting_passive: require('../Images/ic_setting_passive.png'),
 }
 
 export default images
