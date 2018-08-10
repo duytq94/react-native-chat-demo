@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Alert, BackHandler, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, BackHandler, Keyboard, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import styles from './Main.Styles'
 import Toast from 'react-native-simple-toast'
@@ -33,7 +33,8 @@ export default class MainScreen extends Component {
     })
     this.state = {
       email: '',
-      username: ''
+      username: '',
+      isLoading: false,
     }
   }
 
@@ -42,16 +43,20 @@ export default class MainScreen extends Component {
   }
 
   onBtnConnectPress = () => {
+    Keyboard.dismiss()
+    this.setState({isLoading: true})
     if (this.state.email && this.state.username) {
       sb.connect(this.state.email, (user, error) => {
+        this.setState({isLoading: false})
         if (error) {
           Toast.show(error.message)
         } else {
           Toast.show('Login success')
-
+          this.props.navigation.navigate('MenuScreen')
         }
       })
     } else {
+      this.setState({isLoading: false})
       Toast.show('Please input all fields')
     }
   }
@@ -70,6 +75,8 @@ export default class MainScreen extends Component {
             <Text style={styles.textTitleInput}>Email</Text>
             <TextInput
               style={styles.textInput}
+              autoCapitalize={'none'}
+              keyboardType={'email-address'}
               underlineColorAndroid="rgba(0,0,0,0)"
               placeholder="123@gmail.com"
               placeholderTextColor="#aeaeae"
@@ -87,6 +94,7 @@ export default class MainScreen extends Component {
             <TextInput
               ref="username"
               style={styles.textInput}
+              autoCapitalize={'none'}
               underlineColorAndroid="rgba(0,0,0,0)"
               placeholder="Adam"
               placeholderTextColor="#aeaeae"
@@ -104,6 +112,16 @@ export default class MainScreen extends Component {
           </TouchableOpacity>
 
         </View>
+
+        {/* Loading */}
+        {
+          this.state.isLoading ?
+            <View style={styles.viewLoading}>
+              <ActivityIndicator size="large"/>
+            </View> :
+            null
+        }
+
 
       </View>
     )

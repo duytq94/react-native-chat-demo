@@ -43,4 +43,12 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16
   },
+  viewLoading: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255, 0.5)'
+  }
 })
