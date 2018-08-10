@@ -43,7 +43,6 @@ export default class MainScreen extends Component {
     })
     this.state = {
       email: '',
-      username: '',
       isLoading: false,
     }
   }
@@ -56,7 +55,7 @@ export default class MainScreen extends Component {
   onBtnConnectPress = () => {
     Keyboard.dismiss()
     this.setState({isLoading: true})
-    if (this.state.email && this.state.username) {
+    if (this.state.email.trim()) {
       sendBird.connect(this.state.email, (user, error) => {
         this.setState({isLoading: false})
         if (error) {
@@ -91,9 +90,9 @@ export default class MainScreen extends Component {
     }
   }
 
-  writeDataLocal = () => {
+  writeDataLocal = async () => {
     try {
-      AsyncStorage.setItem('email', this.state.email, this.onWriteLocalSuccess)
+      await AsyncStorage.setItem('email', this.state.email, this.onWriteLocalSuccess)
     } catch (error) {
       Toast.show(error.message)
     }
@@ -109,17 +108,12 @@ export default class MainScreen extends Component {
     this.setState({email: ''})
   }
 
-  onClearUsernamePress = () => {
-    this.refInputUsername.clear()
-    this.setState({username: ''})
-  }
-
   render () {
     return (
       <View style={styles.viewContainer}>
         {/* Header */}
         <View style={styles.toolbar}>
-          <Text style={styles.titleToolbar}>CHAT SENBIRD</Text>
+          <Text style={styles.titleToolbar}>CHAT SENDBIRD</Text>
         </View>
 
         {/* Body */}
@@ -134,32 +128,10 @@ export default class MainScreen extends Component {
               underlineColorAndroid="rgba(0,0,0,0)"
               placeholder="123@gmail.com"
               placeholderTextColor="#aeaeae"
-              returnKeyType="next"
+              returnKeyType="done"
               onChangeText={(value) => this.setState({email: value})}
-              onSubmitEditing={() => {
-                this.refInputUsername.focus()
-              }}
             />
             <TouchableOpacity style={styles.viewClear} onPress={this.onClearEmailPress}>
-              <Image source={images.ic_clear} style={styles.icClear}/>
-            </TouchableOpacity>
-            <View style={styles.viewBreakLine}/>
-          </View>
-
-          <View style={styles.viewItemInput}>
-            <Text style={styles.textTitleInput}>Username</Text>
-            <TextInput
-              ref={(ref) => this.refInputUsername = ref}
-              style={styles.textInput}
-              autoCapitalize={'none'}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Adam"
-              placeholderTextColor="#aeaeae"
-              returnKeyType="done"
-              onChangeText={(value) => this.setState({username: value})}
-              onSubmitEditing={this.onBtnConnectPress}
-            />
-            <TouchableOpacity style={styles.viewClear} onPress={this.onClearUsernamePress}>
               <Image source={images.ic_clear} style={styles.icClear}/>
             </TouchableOpacity>
             <View style={styles.viewBreakLine}/>
@@ -181,7 +153,6 @@ export default class MainScreen extends Component {
             </View> :
             null
         }
-
 
       </View>
     )

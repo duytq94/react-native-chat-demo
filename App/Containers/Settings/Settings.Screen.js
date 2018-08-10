@@ -1,19 +1,24 @@
 import React, { Component } from 'react'
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Image, ActivityIndicator, Text, TextInput, TouchableOpacity, View, AsyncStorage } from 'react-native'
 import styles from './Settings.Styles'
 import ImagePicker from 'react-native-image-picker'
+import Toast from 'react-native-simple-toast'
+
 import images from '../../Themes/Images'
 import { sendBird } from '../Root/RootContainer'
 
 export default class SettingsScreen extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
       avatarSource: '',
       username: '',
-      avatarFile: undefined
+      isLoading: false
     }
+  }
+
+  componentDidMount = () => {
+    this.readDataLocal()
   }
 
   pickPhoto = () => {
@@ -32,41 +37,58 @@ export default class SettingsScreen extends Component {
         console.log('ImagePicker Error: ', response.error)
       } else {
         const source = {uri: response.uri}
-        const file = new File()
-        file.append('file', {
-          name: 'abc',
-          uri: response.uri,
-          type: response.type
-        })
-
         this.setState({
-          avatarSource: source,
-          avatarFile: file
+          avatarSource: source
         })
       }
     })
   }
 
   onBtnUpdatePress = () => {
-    if (this.state.avatarFile) {
-
-      sendBird.updateCurrentUserInfoWithProfileImage(this.state.username, this.state.avatarFile,
-        function (response, error) {
-          console.log(response, error.message)
+    if (this.state.username.trim()) {
+      this.setState({isLoading: true})
+      sendBird.updateCurrentUserInfo(this.state.username, null,
+        (response, error) => {
+          if (!error) {
+            this.writeDataLocal()
+          } else {
+            Toast.show(error.message)
+          }
         })
-    } else {
+    }
+  }
 
+  writeDataLocal = async () => {
+    try {
+      await AsyncStorage.setItem('username', this.state.username)
+      Toast.show('Update info success')
+    } catch (error) {
+      Toast.show(error.message)
+    }
+    this.setState({isLoading: false})
+  }
+
+  readDataLocal = async () => {
+    try {
+      const value = await AsyncStorage.getItem('username')
+      if (value) {
+        this.setState({username: value})
+      }
+    } catch (error) {
+      console.log(error)
     }
   }
 
   onBtnLogOutPress = () => {
+    sendBird.disconnect(() => {
 
+    })
   }
 
   render () {
     return (
 
-      <ScrollView>
+      <View style={styles.viewContainer}>
         <View style={styles.viewBody}>
 
           {/* Change avatar */}
@@ -95,10 +117,13 @@ export default class SettingsScreen extends Component {
             <Text style={styles.textTitleInput}>Username</Text>
             <TextInput
               style={styles.textInput}
-              underlineColorAndroid="rgba(0,0,0,0)"
-              placeholder="Adam"
-              placeholderTextColor="#aeaeae"
-              returnKeyType="done"
+              underlineColorAndroid='rgba(0,0,0,0)'
+              placeholder='Adam'
+              placeholderTextColor='#aeaeae'
+              returnKeyType='done'
+              onChangeText={(value) => this.setState({username: value})}
+              value={this.state.username}
+              autoCapitalize={'none'}
             />
             <View style={styles.viewBreakLine}/>
           </View>
@@ -118,7 +143,17 @@ export default class SettingsScreen extends Component {
           </TouchableOpacity>
 
         </View>
-      </ScrollView>
+
+        {/* Loading */}
+        {
+          this.state.isLoading ?
+            <View style={styles.viewLoading}>
+              <ActivityIndicator size="large"/>
+            </View> :
+            null
+        }
+
+      </View>
 
     )
   }
