@@ -21,7 +21,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     height: 45,
-    backgroundColor: '#f5a623',
+    backgroundColor: '#203152',
     flexDirection: 'row'
   },
   btnPassive: {
@@ -33,7 +33,7 @@ export default StyleSheet.create({
     flexDirection: 'row'
   },
   textActive: {
-    color: '#203152',
+    color: 'white',
     fontWeight: 'bold'
   },
   textPassive: {

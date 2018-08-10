@@ -15,9 +15,7 @@ import SplashScreen from 'react-native-splash-screen'
 import styles from './Main.Styles'
 import Toast from 'react-native-simple-toast'
 import images from '../../Themes/Images'
-import SendBird from 'sendbird'
-
-const sb = new SendBird({'appId': '7615E974-CAD6-4AF3-A5FB-1A5041B4F815'})
+import { sendBird } from '../Root/RootContainer'
 
 export default class MainScreen extends Component {
 
@@ -59,7 +57,7 @@ export default class MainScreen extends Component {
     Keyboard.dismiss()
     this.setState({isLoading: true})
     if (this.state.email && this.state.username) {
-      sb.connect(this.state.email, (user, error) => {
+      sendBird.connect(this.state.email, (user, error) => {
         this.setState({isLoading: false})
         if (error) {
           Toast.show(error.message)
@@ -78,7 +76,7 @@ export default class MainScreen extends Component {
       const value = await AsyncStorage.getItem('email')
       if (value) {
         this.setState({isLoading: true})
-        sb.connect(value, (user, error) => {
+        sendBird.connect(value, (user, error) => {
           this.setState({isLoading: false})
           if (error) {
             Toast.show(error.message)

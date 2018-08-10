@@ -1,12 +1,14 @@
 import React, { Component } from 'react'
-import { View, StatusBar } from 'react-native'
+import { StatusBar, View } from 'react-native'
 import ReduxNavigation from '../../Navigation/ReduxNavigation'
 import { connect } from 'react-redux'
 import StartupActions from '../../Redux/StartupRedux'
 import ReduxPersist from '../../Config/ReduxPersist'
 
-// Styles
 import styles from './RootContainerStyles'
+import SendBird from 'sendbird'
+
+export const sendBird = new SendBird({'appId': '7615E974-CAD6-4AF3-A5FB-1A5041B4F815'})
 
 class RootContainer extends Component {
   componentDidMount () {
@@ -19,8 +21,8 @@ class RootContainer extends Component {
   render () {
     return (
       <View style={styles.applicationView}>
-        <StatusBar barStyle='light-content' />
-        <ReduxNavigation />
+        <StatusBar barStyle='light-content'/>
+        <ReduxNavigation/>
       </View>
     )
   }

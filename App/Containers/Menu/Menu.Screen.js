@@ -32,8 +32,8 @@ export default class MenuScreen extends Component {
         <View style={styles.viewContainer}>
           {
             this.state.isTabOneActive ?
-              <SettingsScreen/> :
-              null
+              null :
+              <SettingsScreen/>
           }
         </View>
 
@@ -47,7 +47,7 @@ export default class MenuScreen extends Component {
               })
             }}>
             <Image style={styles.icBottom}
-                   source={this.state.isTabOneActive ? images.ic_list_active : images.ic_list_passive}/>
+                   source={images.ic_list_passive}/>
             <Text
               style={this.state.isTabOneActive ? styles.textActive : styles.textPassive}>
               LIST
@@ -62,7 +62,7 @@ export default class MenuScreen extends Component {
               })
             }}>
             <Image style={styles.icBottom}
-                   source={!this.state.isTabOneActive ? images.ic_setting_active : images.ic_setting_passive}/>
+                   source={images.ic_setting_passive}/>
             <Text
               style={this.state.isTabOneActive ? styles.textPassive : styles.textActive}>
               SETTINGS
