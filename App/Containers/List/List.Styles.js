@@ -97,5 +97,32 @@ export default StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     marginTop: 10
+  },
+
+  // Item
+  viewWrapItem: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    alignItems: 'center',
+    backgroundColor: 'white',
+    borderRadius: 5,
+    padding: 10
+  },
+  viewAvatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    marginLeft: 10
+  },
+  viewTextNameGroup: {
+    marginLeft: 20,
+    color: '#203152',
+  },
+  viewTextMail: {
+    marginTop: 5,
+    marginLeft: 20,
+    color: '#203152',
   }
 })

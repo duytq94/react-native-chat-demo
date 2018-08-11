@@ -1,5 +1,15 @@
 import React, { Component } from 'react'
-import { Image, Text, TouchableOpacity, View, TextInput, Modal, ActivityIndicator } from 'react-native'
+import {
+  Image,
+  Text,
+  TouchableOpacity,
+  View,
+  TextInput,
+  Modal,
+  ActivityIndicator,
+  FlatList,
+  RefreshControl
+} from 'react-native'
 import styles from './List.Styles'
 import images from '../../Themes/Images'
 import { sendBird } from '../Root/RootContainer'
@@ -14,25 +24,34 @@ export default class ListScreen extends Component {
       dialogVisible: false,
       inviteEmail: '',
       groupName: '',
-      isLoading: false
+      isLoading: false,
+      arrGroup: []
     }
   }
 
   componentDidMount () {
-    // let channelListQuery = sendBird.GroupChannel.createMyGroupChannelListQuery()
-    // channelListQuery.includeEmpty = true
-    // channelListQuery.limit = 20 // pagination limit could be set up to 100
-    //
-    // if (channelListQuery.hasNext) {
-    //   channelListQuery.next(function (channelList, error) {
-    //     if (error) {
-    //       console.error(error)
-    //       return
-    //     }
-    //
-    //     console.log(channelList)
-    //   })
-    // }
+    this.getListGroup()
+  }
+
+  getListGroup = () => {
+    this.setState({isLoading: true})
+    let channelListQuery = sendBird.GroupChannel.createMyGroupChannelListQuery()
+    channelListQuery.includeEmpty = true
+    channelListQuery.limit = 20 // pagination limit could be set up to 100
+
+    let temp
+    if (channelListQuery.hasNext) {
+      channelListQuery.next((channelList, error) => {
+        if (error) {
+          console.error(error)
+          this.setState({isLoading: false})
+          return
+        }
+        this.setState({arrGroup: channelList})
+        temp = channelList
+      })
+      this.setState({isLoading: false, arrGroup: temp})
+    }
   }
 
   openModal = () => {
@@ -56,15 +75,15 @@ export default class ListScreen extends Component {
       dialogVisible: false,
       isLoading: true,
     })
-    console.log('aaaaaaaaaa', currentEmail)
+
     if (currentEmail.trim() && this.state.inviteEmail.trim()) {
       let userIds = [currentEmail, this.state.inviteEmail]
       sendBird.GroupChannel.createChannelWithUserIds(userIds, false, this.state.groupName, null, null,
         (createdChannel, error) => {
           if (error) {
-            console.log(error)
+            Toast.show('Invite fail')
           } else {
-            console.log(createdChannel)
+            Toast.show('Invite successful')
           }
           this.setState({isLoading: false})
         })
@@ -72,6 +91,36 @@ export default class ListScreen extends Component {
       Toast.show('Please input all fields')
       this.setState({isLoading: false})
     }
+  }
+
+  renderItem = ({item}) => {
+    console.log('aaaaaaaaa', item)
+    let peerNickname = ''
+    let peerEmail = ''
+    for (let i = 0; i < item.members.length; i++) {
+      let info = item.members[i]
+      if (info.userId !== currentEmail) {
+        peerEmail = info.userId
+        peerNickname = info.nickname ? info.nickname : 'Not available'
+        break
+      }
+    }
+    return (
+      <TouchableOpacity style={styles.viewWrapItem}>
+        <Image style={styles.viewAvatar} source={{uri: item.coverUrl}}/>
+        <View>
+          <Text style={styles.viewTextNameGroup}>
+            Group name: {item.name}
+          </Text>
+          <Text style={styles.viewTextMail}>
+            Email: {peerEmail}
+          </Text>
+          <Text style={styles.viewTextMail}>
+            Nickname: {peerNickname}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
   }
 
   render () {
@@ -102,6 +151,8 @@ export default class ListScreen extends Component {
                 onSubmitEditing={() => {
                   this.refInputGroupName.focus()
                 }}
+                autoCapitalize={'none'}
+                keyboardType={'email-address'}
               />
               <View style={styles.viewUnderline}/>
               <TextInput
@@ -114,6 +165,7 @@ export default class ListScreen extends Component {
                 }
                 numberOfLines={1}
                 returnKeyType="done"
+                autoCapitalize={'none'}
               />
               <View style={styles.viewUnderline}/>
               <View
@@ -135,19 +187,31 @@ export default class ListScreen extends Component {
           </View>
         </Modal>
 
+        {/*List group chat*/}
+        <FlatList
+          refreshControl={
+            <RefreshControl
+              onRefresh={this.getListGroup}
+              refreshing={this.state.isLoading}
+            />
+          }
+          style={styles.viewContainer}
+          data={this.state.arrGroup}
+          renderItem={(value) => this.renderItem(value)}
+          keyExtractor={(item, index) => index.toString()}
+        />
+
         {/* Floating button */}
         <TouchableOpacity style={styles.viewWrapFloatingBtn} onPress={this.openModal}>
           <Image source={images.ic_add} style={styles.viewImgBtn}/>
         </TouchableOpacity>
 
         {/* Loading */}
-        {
-          this.state.isLoading ?
-            <View style={styles.viewLoading}>
-              <ActivityIndicator size="large"/>
-            </View> :
-            null
-        }
+        {this.state.isLoading ?
+          <View style={styles.viewLoading}>
+            <ActivityIndicator size="large"/>
+          </View> :
+          null}
 
       </View>
 

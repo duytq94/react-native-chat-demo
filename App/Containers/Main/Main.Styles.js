@@ -8,8 +8,8 @@ export default StyleSheet.create({
   },
   viewBody: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 20
+    padding: 20,
+    marginTop: 50
   },
   textTitleInput: {
     color: '#203152',
@@ -45,7 +45,9 @@ export default StyleSheet.create({
     height: 50,
     backgroundColor: '#203152',
     borderRadius: 10,
-    margin: 10
+    marginTop: 10,
+    marginLeft: 30,
+    marginRight: 30
   },
   textBtnConnect: {
     color: 'white',
