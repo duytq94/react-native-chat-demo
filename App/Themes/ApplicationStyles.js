@@ -66,6 +66,14 @@ const ApplicationStyles = {
       left: 26,
       top: Platform.OS === 'android' ? 10 : 20
     },
+    viewLoading: {
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: 'rgba(255,255,255, 0.5)'
+    }
   },
   darkLabelContainer: {
     padding: Metrics.smallMargin,

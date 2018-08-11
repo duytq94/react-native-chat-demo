@@ -17,6 +17,8 @@ import Toast from 'react-native-simple-toast'
 import images from '../../Themes/Images'
 import { sendBird } from '../Root/RootContainer'
 
+export let currentEmail = ''
+
 export default class MainScreen extends Component {
 
   constructor (props) {
@@ -75,6 +77,7 @@ export default class MainScreen extends Component {
       const value = await AsyncStorage.getItem('email')
       if (value) {
         this.setState({email: value})
+        currentEmail = value
       }
     } catch (error) {
       console.log(error)
@@ -84,6 +87,7 @@ export default class MainScreen extends Component {
   writeDataLocal = async () => {
     try {
       await AsyncStorage.setItem('email', this.state.email, this.onWriteLocalSuccess)
+      currentEmail = this.state.email
     } catch (error) {
       Toast.show(error.message)
     }

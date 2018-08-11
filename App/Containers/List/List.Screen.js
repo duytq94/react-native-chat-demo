@@ -1,15 +1,20 @@
 import React, { Component } from 'react'
-import { Image, Text, TouchableOpacity, View, TextInput, Modal } from 'react-native'
+import { Image, Text, TouchableOpacity, View, TextInput, Modal, ActivityIndicator } from 'react-native'
 import styles from './List.Styles'
 import images from '../../Themes/Images'
 import { sendBird } from '../Root/RootContainer'
+import { currentEmail } from '../Main/Main.Screen'
+import Toast from 'react-native-simple-toast'
 
 export default class ListScreen extends Component {
 
   constructor (props) {
     super(props)
     this.state = {
-      dialogVisible: false
+      dialogVisible: false,
+      inviteEmail: '',
+      groupName: '',
+      isLoading: false
     }
   }
 
@@ -38,12 +43,35 @@ export default class ListScreen extends Component {
     this.setState({dialogVisible: false})
   }
 
-  onDialogDismiss () {
-    this.setState({dialogVisible: false})
+  onDialogCancel () {
+    this.setState({
+      dialogVisible: false,
+      inviteEmail: '',
+      groupName: ''
+    })
   }
 
   onDialogDone () {
-    this.setState({dialogVisible: false})
+    this.setState({
+      dialogVisible: false,
+      isLoading: true,
+    })
+    console.log('aaaaaaaaaa', currentEmail)
+    if (currentEmail.trim() && this.state.inviteEmail.trim()) {
+      let userIds = [currentEmail, this.state.inviteEmail]
+      sendBird.GroupChannel.createChannelWithUserIds(userIds, false, this.state.groupName, null, null,
+        (createdChannel, error) => {
+          if (error) {
+            console.log(error)
+          } else {
+            console.log(createdChannel)
+          }
+          this.setState({isLoading: false})
+        })
+    } else {
+      Toast.show('Please input all fields')
+      this.setState({isLoading: false})
+    }
   }
 
   render () {
@@ -66,8 +94,8 @@ export default class ListScreen extends Component {
                 placeholder="Email"
                 style={styles.textInputDialog}
                 underlineColorAndroid="rgba(0,0,0,0)"
-                onChangeText={textUserInput =>
-                  this.setState({currentText: textUserInput})
+                onChangeText={value =>
+                  this.setState({inviteEmail: value})
                 }
                 numberOfLines={1}
                 returnKeyType="next"
@@ -81,8 +109,8 @@ export default class ListScreen extends Component {
                 placeholder="Group name"
                 style={styles.textInputDialog}
                 underlineColorAndroid="rgba(0,0,0,0)"
-                onChangeText={textUserInput =>
-                  this.setState({currentText: textUserInput})
+                onChangeText={value =>
+                  this.setState({groupName: value})
                 }
                 numberOfLines={1}
                 returnKeyType="done"
@@ -92,7 +120,7 @@ export default class ListScreen extends Component {
                 style={styles.viewWrapBtnDialog}>
                 <TouchableOpacity
                   style={styles.btnDismissDialog}
-                  onPress={() => this.onDialogDismiss()}
+                  onPress={() => this.onDialogCancel()}
                 >
                   <Text style={styles.textBtnDialog}>CANCEL</Text>
                 </TouchableOpacity>
@@ -111,6 +139,16 @@ export default class ListScreen extends Component {
         <TouchableOpacity style={styles.viewWrapFloatingBtn} onPress={this.openModal}>
           <Image source={images.ic_add} style={styles.viewImgBtn}/>
         </TouchableOpacity>
+
+        {/* Loading */}
+        {
+          this.state.isLoading ?
+            <View style={styles.viewLoading}>
+              <ActivityIndicator size="large"/>
+            </View> :
+            null
+        }
+
       </View>
 
     )
