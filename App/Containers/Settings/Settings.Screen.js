@@ -18,6 +18,10 @@ export default class SettingsScreen extends Component {
     }
   }
 
+  componentDidMount () {
+    this.readDataLocal()
+  }
+
   pickPhoto = () => {
     let options = {
       title: 'Choose ',
@@ -114,7 +118,7 @@ export default class SettingsScreen extends Component {
             <TextInput
               style={styles.textInput}
               underlineColorAndroid='rgba(0,0,0,0)'
-              placeholder='Adam'
+              placeholder='Have not setup yet'
               placeholderTextColor='#aeaeae'
               returnKeyType='done'
               onChangeText={(value) => this.setState({username: value})}

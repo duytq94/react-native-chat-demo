@@ -62,7 +62,7 @@ export default class ListScreen extends Component {
     this.setState({dialogVisible: false})
   }
 
-  onDialogCancel () {
+  onDialogCancel = () => {
     this.setState({
       dialogVisible: false,
       inviteEmail: '',
@@ -70,7 +70,7 @@ export default class ListScreen extends Component {
     })
   }
 
-  onDialogDone () {
+  onDialogDone = () => {
     this.setState({
       dialogVisible: false,
       isLoading: true,
@@ -94,7 +94,6 @@ export default class ListScreen extends Component {
   }
 
   renderItem = ({item}) => {
-    console.log('aaaaaaaaa', item)
     let peerNickname = ''
     let peerEmail = ''
     for (let i = 0; i < item.members.length; i++) {
@@ -106,7 +105,9 @@ export default class ListScreen extends Component {
       }
     }
     return (
-      <TouchableOpacity style={styles.viewWrapItem}>
+      <TouchableOpacity style={styles.viewWrapItem} onPress={() =>
+        this.props.navigation.navigate('ChatScreen', {channelUrl: item.url})
+      }>
         <Image style={styles.viewAvatar} source={{uri: item.coverUrl}}/>
         <View>
           <Text style={styles.viewTextNameGroup}>

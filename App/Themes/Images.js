@@ -21,6 +21,7 @@ const images = {
   ic_setting_passive: require('../Images/ic_setting_passive.png'),
   ic_camera: require('../Images/ic_camera.png'),
   ic_add: require('../Images/ic_add.png'),
+  ic_send: require('../Images/ic_send.png'),
 }
 
 export default images

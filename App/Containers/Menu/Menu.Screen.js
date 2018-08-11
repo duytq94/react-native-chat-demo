@@ -44,10 +44,8 @@ export default class MenuScreen extends Component {
         <View style={styles.viewContainer}>
           {
             this.state.isTabOneActive ?
-              <ListScreen/> :
-              <SettingsScreen
-                onLogOut={this.onLogOut}
-              />
+              <ListScreen {...this.props}/> :
+              <SettingsScreen onLogOut={this.onLogOut}/>
           }
         </View>
 
