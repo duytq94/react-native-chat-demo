@@ -3,7 +3,10 @@ import { Image, Text, TouchableOpacity, View } from 'react-native'
 import SplashScreen from 'react-native-splash-screen'
 import styles from './Menu.Styles'
 import SettingsScreen from '../Settings/Settings.Screen'
+import ListScreen from '../List/List.Screen'
 import images from '../../Themes/Images'
+import { NavigationActions } from 'react-navigation'
+import { sendBird } from '../Root/RootContainer'
 
 export default class MenuScreen extends Component {
 
@@ -12,12 +15,21 @@ export default class MenuScreen extends Component {
     this.state = {
       // true = List, false = Settings,
       isTabOneActive: true,
-
     }
   }
 
   componentDidMount () {
     SplashScreen.hide()
+  }
+
+  onLogOut = () => {
+    sendBird.disconnect(() => {
+      const resetAction = NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: 'MainScreen'})]
+      })
+      this.props.navigation.dispatch(resetAction)
+    })
   }
 
   render () {
@@ -32,8 +44,10 @@ export default class MenuScreen extends Component {
         <View style={styles.viewContainer}>
           {
             this.state.isTabOneActive ?
-              null :
-              <SettingsScreen/>
+              <ListScreen/> :
+              <SettingsScreen
+                onLogOut={this.onLogOut}
+              />
           }
         </View>
 

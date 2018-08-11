@@ -17,7 +17,7 @@ export default StyleSheet.create({
     fontSize: 16
   },
   textInput: {
-    marginLeft: 10,
+    marginLeft: 25,
     marginRight: 25
   },
   viewItemInput: {
@@ -35,7 +35,7 @@ export default StyleSheet.create({
   },
   viewBreakLine: {
     width: '90%',
-    height: 0.3,
+    height: 0.5,
     backgroundColor: 'grey',
     marginLeft: 10
   },

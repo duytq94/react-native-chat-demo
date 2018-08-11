@@ -3,6 +3,7 @@ import { Image, ActivityIndicator, Text, TextInput, TouchableOpacity, View, Asyn
 import styles from './Settings.Styles'
 import ImagePicker from 'react-native-image-picker'
 import Toast from 'react-native-simple-toast'
+import { NavigationActions } from 'react-navigation'
 
 import images from '../../Themes/Images'
 import { sendBird } from '../Root/RootContainer'
@@ -15,10 +16,6 @@ export default class SettingsScreen extends Component {
       username: '',
       isLoading: false
     }
-  }
-
-  componentDidMount = () => {
-    this.readDataLocal()
   }
 
   pickPhoto = () => {
@@ -52,6 +49,7 @@ export default class SettingsScreen extends Component {
           if (!error) {
             this.writeDataLocal()
           } else {
+            this.setState({isLoading: false})
             Toast.show(error.message)
           }
         })
@@ -80,9 +78,7 @@ export default class SettingsScreen extends Component {
   }
 
   onBtnLogOutPress = () => {
-    sendBird.disconnect(() => {
-
-    })
+    this.props.onLogOut()
   }
 
   render () {

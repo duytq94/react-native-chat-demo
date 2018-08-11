@@ -74,16 +74,7 @@ export default class MainScreen extends Component {
     try {
       const value = await AsyncStorage.getItem('email')
       if (value) {
-        this.setState({isLoading: true})
-        sendBird.connect(value, (user, error) => {
-          this.setState({isLoading: false})
-          if (error) {
-            Toast.show(error.message)
-          } else {
-            Toast.show('Login success')
-            this.props.navigation.navigate('MenuScreen')
-          }
-        })
+        this.setState({email: value})
       }
     } catch (error) {
       console.log(error)
@@ -99,7 +90,6 @@ export default class MainScreen extends Component {
   }
 
   onWriteLocalSuccess = () => {
-    Toast.show('Login success')
     this.props.navigation.navigate('MenuScreen')
   }
 
@@ -123,6 +113,7 @@ export default class MainScreen extends Component {
             <TextInput
               ref={(ref) => this.refInputEmail = ref}
               style={styles.textInput}
+              value={this.state.email}
               autoCapitalize={'none'}
               keyboardType={'email-address'}
               underlineColorAndroid="rgba(0,0,0,0)"
