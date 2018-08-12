@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Image, ActivityIndicator, Text, TextInput, TouchableOpacity, View, AsyncStorage } from 'react-native'
+import { ActivityIndicator, AsyncStorage, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import styles from './Settings.Styles'
 import ImagePicker from 'react-native-image-picker'
 import Toast from 'react-native-simple-toast'
-import { NavigationActions } from 'react-navigation'
 
 import images from '../../Themes/Images'
 import { sendBird } from '../Root/RootContainer'
