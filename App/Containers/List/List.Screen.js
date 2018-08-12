@@ -81,6 +81,7 @@ export default class ListScreen extends Component {
             Toast.show('Invite fail')
           } else {
             Toast.show('Invite successful')
+            this.getListGroup()
           }
           this.setState({isLoading: false})
         })
@@ -92,8 +93,6 @@ export default class ListScreen extends Component {
 
   renderItem = ({item}) => {
     let peerInfo = {}
-    let peerNickname = ''
-    let peerEmail = ''
     for (let i = 0; i < item.members.length; i++) {
       let info = item.members[i]
       if (info.userId !== currentEmail) {
