@@ -24,5 +24,46 @@ export default StyleSheet.create({
     width: 35,
     height: 35,
     marginLeft: 10
+  },
+
+  // Message right
+  viewWrapItemRight: {
+    alignSelf: 'flex-end',
+    marginRight: 20,
+    marginBottom: 6,
+    marginTop: 6
+  },
+  textItemRight: {
+    borderRadius: 10,
+    width: 170,
+    backgroundColor: 'white',
+    color: 'black',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+
+  // Message left
+  viewWrapItemLeft: {
+    marginLeft: 10,
+    marginBottom: 6,
+    marginTop: 6,
+  },
+  textItemLeft: {
+    borderRadius: 10,
+    width: 170,
+    backgroundColor: '#203152',
+    color: 'white',
+    paddingTop: 8,
+    paddingBottom: 8,
+    paddingLeft: 10,
+    paddingRight: 10,
+  },
+  avatarItemLeft: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    marginLeft: 10
   }
 })

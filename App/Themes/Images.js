@@ -22,6 +22,7 @@ const images = {
   ic_camera: require('../Images/ic_camera.png'),
   ic_add: require('../Images/ic_add.png'),
   ic_send: require('../Images/ic_send.png'),
+  ic_back: require('../Images/ic_back.png'),
 }
 
 export default images

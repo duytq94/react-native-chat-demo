@@ -1,22 +1,12 @@
 import React, { Component } from 'react'
-import {
-  ActivityIndicator,
-  Alert,
-  AsyncStorage,
-  BackHandler,
-  Image,
-  Keyboard,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  FlatList
-} from 'react-native'
-import SplashScreen from 'react-native-splash-screen'
+import { BackHandler, FlatList, Image, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import styles from './Chat.Styles'
 import Toast from 'react-native-simple-toast'
 import images from '../../Themes/Images'
 import { sendBird } from '../Root/RootContainer'
+import { currentEmail } from '../Main/Main.Screen'
+
+const UNIQUE_HANDLER_ID = 123
 
 export default class ChatScreen extends Component {
 
@@ -26,7 +16,6 @@ export default class ChatScreen extends Component {
     if (!this.props.navigation.state.params.channelUrl) {
       Toast.show('Can not get channel url')
       this.handleBackPress()
-
     } else {
       this.channelUrl = this.props.navigation.state.params.channelUrl
       this.channel = undefined
@@ -40,6 +29,7 @@ export default class ChatScreen extends Component {
 
   componentWillMount () {
     BackHandler.addEventListener('hardwareBackPress', this.backPress)
+    sendBird.removeChannelHandler(UNIQUE_HANDLER_ID)
   }
 
   componentWillUnmount () {
@@ -48,6 +38,7 @@ export default class ChatScreen extends Component {
 
   componentDidMount () {
     this.setupChat()
+    this.setupListener()
   }
 
   setupChat = () => {
@@ -66,6 +57,20 @@ export default class ChatScreen extends Component {
     })
   }
 
+  setupListener = () => {
+    let channelHandler = new sendBird.ChannelHandler()
+
+    channelHandler.onMessageReceived = (channel, message) => {
+      if (channel.url === this.channelUrl) {
+        let temp = this.processMessage(message)
+        this.setState({
+          arrMessage: [temp, ...this.state.arrMessage]
+        })
+      }
+    }
+    sendBird.addChannelHandler(UNIQUE_HANDLER_ID, channelHandler)
+  }
+
   loadHistory = () => {
     let messageListQuery = this.channel.createPreviousMessageListQuery()
 
@@ -74,8 +79,7 @@ export default class ChatScreen extends Component {
         console.error(error)
         Toast.show('Can not get history messages')
       } else {
-        this.setState({arrMessage: messageList})
-        console.log('bbbbbbbbbbb', messageList)
+        this.setState({arrMessage: messageList.map(item => this.processMessage(item))})
       }
     })
   }
@@ -85,13 +89,44 @@ export default class ChatScreen extends Component {
     return true
   }
 
-  renderItem = ({item}) => {
-    console.log('aaaaaaaaaa', item)
-    return (
-      <View>
+  renderItem = ({item, index}) => {
+    // Message right (mine)
+    if (item.sender === currentEmail) {
+      return (
+        <View style={styles.viewWrapItemRight}>
+          <Text style={styles.textItemRight}>
+            {item.content}
+          </Text>
+        </View>
+      )
+    } else {
+      // Message left
+      return (
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          {
+            this.state.arrMessage[index - 1] && this.state.arrMessage[index - 1].sender === currentEmail ?
+              <Image style={styles.avatarItemLeft} source={{uri: item.avatar}}/> :
+              <View style={{width: 30, height: 30, marginLeft: 10}}/>
+          }
+          <View style={styles.viewWrapItemLeft}>
+            <Text style={styles.textItemLeft}>
+              {item.content}
+            </Text>
+          </View>
+        </View>
+      )
+    }
 
-      </View>
-    )
+  }
+
+  processMessage = (item) => {
+    let message = {}
+
+    message.content = item.message
+    message.avatar = item._sender.profileUrl
+    message.sender = item._sender.userId
+
+    return message
   }
 
   sendMessage = () => {
@@ -101,10 +136,19 @@ export default class ChatScreen extends Component {
           console.log(err)
           Toast.show('Can not send')
         } else {
-          // this.onMessage(message)
+          let temp = {
+            content: this.state.currentMessage,
+            avatar: '',
+            sender: currentEmail
+          }
+          this.refInput.clear()
+          this.setState({
+            currentMessage: '',
+            arrMessage: [temp, ...this.state.arrMessage]
+          })
+
         }
       })
-      this.setState({currentMessage: ''})
     } else {
       Toast.show('Nothing to send')
     }
@@ -116,16 +160,20 @@ export default class ChatScreen extends Component {
 
         {/* Header */}
         <View style={styles.toolbar}>
+          <TouchableOpacity onPress={() => this.handleBackPress()}>
+            <Image style={styles.icBack} source={images.ic_back}/>
+          </TouchableOpacity>
           <Text style={styles.titleToolbar}>CHAT</Text>
         </View>
 
         {/*List message*/}
         <FlatList
+          inverted={true}
           style={styles.viewContainer}
           data={this.state.arrMessage}
-          renderItem={(value) => this.renderItem(value)}
+          renderItem={this.renderItem}
           keyExtractor={(item, index) => index.toString()}
-        />
+          contentContainerStyle={{paddingTop: 10, paddingBottom: 10}}/>
 
         {/*Input*/}
         <View style={styles.viewWrapInput}>
@@ -133,7 +181,7 @@ export default class ChatScreen extends Component {
           <TextInput
             underlineColorAndroid="rgba(0,0,0,0)"
             style={styles.viewTextInput}
-            ref="reply"
+            ref={(ref) => this.refInput = ref}
             placeholder="Type your message..."
             onChangeText={value => {
               this.setState({currentMessage: value})
