@@ -124,5 +124,14 @@ export default StyleSheet.create({
     marginTop: 5,
     marginLeft: 20,
     color: '#203152',
+  },
+  statusIndicator: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#70cc2f',
+    position: 'absolute',
+    right: 5,
+    bottom: 0
   }
 })

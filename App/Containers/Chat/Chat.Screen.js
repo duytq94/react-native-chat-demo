@@ -47,10 +47,8 @@ export default class ChatScreen extends Component {
       if (error) {
         console.log(error)
         Toast.show('Can not get channel, try again')
+        this.setState({isLoading: false})
       } else {
-        this.setState({
-          isLoading: false
-        })
         this.channel = channel
         this.loadHistory()
       }
@@ -80,6 +78,7 @@ export default class ChatScreen extends Component {
         Toast.show('Can not get history messages')
       } else {
         this.setState({arrMessage: messageList.map(item => this.processMessage(item))})
+        this.setState({isLoading: false})
       }
     })
   }
@@ -104,7 +103,8 @@ export default class ChatScreen extends Component {
       return (
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {
-            this.state.arrMessage[index - 1] && this.state.arrMessage[index - 1].sender === currentEmail ?
+            (this.state.arrMessage[index - 1] && this.state.arrMessage[index - 1].sender === currentEmail ||
+              index === 0) ?
               <Image style={styles.avatarItemLeft} source={{uri: item.avatar}}/> :
               <View style={{width: 30, height: 30, marginLeft: 10}}/>
           }

@@ -39,18 +39,15 @@ export default class ListScreen extends Component {
     channelListQuery.includeEmpty = true
     channelListQuery.limit = 20 // pagination limit could be set up to 100
 
-    let temp
     if (channelListQuery.hasNext) {
       channelListQuery.next((channelList, error) => {
         if (error) {
           console.error(error)
-          this.setState({isLoading: false})
-          return
+        } else {
+          this.setState({arrGroup: channelList})
         }
-        this.setState({arrGroup: channelList})
-        temp = channelList
       })
-      this.setState({isLoading: false, arrGroup: temp})
+      this.setState({isLoading: false})
     }
   }
 
@@ -94,13 +91,13 @@ export default class ListScreen extends Component {
   }
 
   renderItem = ({item}) => {
+    let peerInfo = {}
     let peerNickname = ''
     let peerEmail = ''
     for (let i = 0; i < item.members.length; i++) {
       let info = item.members[i]
       if (info.userId !== currentEmail) {
-        peerEmail = info.userId
-        peerNickname = info.nickname ? info.nickname : 'Not available'
+        peerInfo = info
         break
       }
     }
@@ -108,16 +105,21 @@ export default class ListScreen extends Component {
       <TouchableOpacity style={styles.viewWrapItem} onPress={() =>
         this.props.navigation.navigate('ChatScreen', {channelUrl: item.url})
       }>
-        <Image style={styles.viewAvatar} source={{uri: item.coverUrl}}/>
+        <View>
+          <Image style={styles.viewAvatar} source={{uri: item.coverUrl}}/>
+          {peerInfo.connectionStatus === 'online' ?
+            <View style={styles.statusIndicator}/> :
+            null}
+        </View>
         <View>
           <Text style={styles.viewTextNameGroup}>
             Group name: {item.name}
           </Text>
           <Text style={styles.viewTextMail}>
-            Email: {peerEmail}
+            Email: {peerInfo.userId}
           </Text>
           <Text style={styles.viewTextMail}>
-            Nickname: {peerNickname}
+            Nickname: {peerInfo.nickname ? peerInfo.nickname : 'Not available'}
           </Text>
         </View>
       </TouchableOpacity>

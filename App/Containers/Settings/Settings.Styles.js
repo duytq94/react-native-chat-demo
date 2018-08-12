@@ -44,7 +44,8 @@ export default StyleSheet.create({
 
   // Input
   textTitleInput: {
-    color: '#203152'
+    color: '#203152',
+    fontWeight: 'bold'
   },
   textInput: {
     marginLeft: 10,
