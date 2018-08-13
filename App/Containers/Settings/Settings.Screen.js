@@ -13,7 +13,7 @@ export default class SettingsScreen extends Component {
     this.file = null
     this.state = {
       avatarSource: '',
-      profileUrl: null,
+      profileUrl: '',
       username: '',
       isLoading: false
     }
