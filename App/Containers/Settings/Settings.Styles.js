@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import ApplicationStyles from '../../Themes/ApplicationStyles'
 
 export default StyleSheet.create({
@@ -50,8 +50,8 @@ export default StyleSheet.create({
   textInput: {
     marginLeft: 15,
     marginRight: 15,
-    marginTop: 10,
-    marginBottom: 10,
+    marginTop: Platform.OS === 'android' ? 0 : 10,
+    marginBottom: Platform.OS === 'android' ? 0 : 10,
     color: '#203152'
   },
   viewItemInput: {

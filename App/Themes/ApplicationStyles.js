@@ -50,7 +50,14 @@ const ApplicationStyles = {
       width: '100%',
       height: Platform.OS === 'android' ? 48 : 68,
       justifyContent: 'center',
-      backgroundColor: '#f5a623'
+      backgroundColor: '#f5a623',
+      elevation: 5,
+      shadowColor: 'grey',
+      shadowOffset: {
+        width: 0,
+        height: 3
+      },
+      shadowOpacity: 0.5
     },
     titleToolbar: {
       color: '#203152',

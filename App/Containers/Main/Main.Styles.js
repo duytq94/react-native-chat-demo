@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native'
+import { Platform, StyleSheet } from 'react-native'
 import ApplicationStyles from '../../Themes/ApplicationStyles'
 
 export default StyleSheet.create({
@@ -19,8 +19,8 @@ export default StyleSheet.create({
   textInput: {
     marginLeft: 25,
     marginRight: 25,
-    marginTop: 10,
-    marginBottom: 10
+    marginTop: Platform.OS === 'android' ? 0 : 10,
+    marginBottom: Platform.OS === 'android' ? 0 : 10
   },
   viewItemInput: {
     marginTop: 10,
@@ -29,7 +29,7 @@ export default StyleSheet.create({
   viewClear: {
     position: 'absolute',
     right: 10,
-    top: 30
+    top: Platform.OS === 'android' ? 35 : 30
   },
   icClear: {
     width: 20,

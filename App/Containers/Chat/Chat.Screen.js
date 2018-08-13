@@ -173,7 +173,8 @@ export default class ChatScreen extends Component {
           data={this.state.arrMessage}
           renderItem={this.renderItem}
           keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{paddingTop: 10, paddingBottom: 10}}/>
+          contentContainerStyle={{paddingTop: 10, paddingBottom: 10}}
+        />
 
         {/*Input*/}
         <View style={styles.viewWrapInput}>
