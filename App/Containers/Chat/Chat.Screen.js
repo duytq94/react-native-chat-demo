@@ -3,11 +3,12 @@ import {
   BackHandler,
   FlatList,
   Image,
+  KeyboardAvoidingView,
+  Platform,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
-  KeyboardAvoidingView
+  View
 } from 'react-native'
 import styles from './Chat.Styles'
 import Toast from 'react-native-simple-toast'
@@ -18,7 +19,7 @@ import { currentEmail } from '../Main/Main.Screen'
 const UNIQUE_HANDLER_ID = 123
 
 export default class ChatScreen extends Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.backPress = this.handleBackPress.bind(this)
     if (!this.props.navigation.state.params.channelUrl) {
@@ -35,27 +36,27 @@ export default class ChatScreen extends Component {
     }
   }
 
-  componentWillMount() {
+  componentWillMount () {
     BackHandler.addEventListener('hardwareBackPress', this.backPress)
     sendBird.removeChannelHandler(UNIQUE_HANDLER_ID)
   }
 
-  componentWillUnmount() {
+  componentWillUnmount () {
     BackHandler.removeEventListener('hardwareBackPress', this.backPress)
   }
 
-  componentDidMount() {
+  componentDidMount () {
     this.setupChat()
     this.setupListener()
   }
 
   setupChat = () => {
-    this.setState({ isLoading: true })
+    this.setState({isLoading: true})
     sendBird.GroupChannel.getChannel(this.channelUrl, (channel, error) => {
       if (error) {
         console.log(error)
         Toast.show('Can not get channel, try again')
-        this.setState({ isLoading: false })
+        this.setState({isLoading: false})
       } else {
         this.channel = channel
         this.loadHistory()
@@ -88,7 +89,7 @@ export default class ChatScreen extends Component {
         this.setState({
           arrMessage: messageList.map(item => this.processMessage(item))
         })
-        this.setState({ isLoading: false })
+        this.setState({isLoading: false})
       }
     })
   }
@@ -98,7 +99,7 @@ export default class ChatScreen extends Component {
     return true
   }
 
-  renderItem = ({ item, index }) => {
+  renderItem = ({item, index}) => {
     // Message right (mine)
     if (item.sender === currentEmail) {
       return (
@@ -109,16 +110,16 @@ export default class ChatScreen extends Component {
     } else {
       // Message left
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
           {(this.state.arrMessage[index - 1] &&
             this.state.arrMessage[index - 1].sender === currentEmail) ||
           index === 0 ? (
             <Image
               style={styles.avatarItemLeft}
-              source={{ uri: item.avatar }}
+              source={{uri: item.avatar}}
             />
           ) : (
-            <View style={{ width: 30, height: 30, marginLeft: 10 }} />
+            <View style={{width: 30, height: 30, marginLeft: 10}}/>
           )}
           <View style={styles.viewWrapItemLeft}>
             <Text style={styles.textItemLeft}>{item.content}</Text>
@@ -164,47 +165,59 @@ export default class ChatScreen extends Component {
     }
   }
 
-  render() {
+  render () {
     return (
       <View style={styles.viewContainer}>
         {/* Header */}
         <View style={styles.toolbar}>
           <TouchableOpacity onPress={() => this.handleBackPress()}>
-            <Image style={styles.icBack} source={images.ic_back} />
+            <Image style={styles.icBack} source={images.ic_back}/>
           </TouchableOpacity>
           <Text style={styles.titleToolbar}>CHAT</Text>
         </View>
 
-        <KeyboardAvoidingView style={styles.viewContainer} behavior="padding">
-          {/*List message*/}
-          <FlatList
-            inverted={true}
-            style={styles.viewContainer}
-            data={this.state.arrMessage}
-            renderItem={this.renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={{ paddingTop: 10, paddingBottom: 10 }}
+        {Platform.OS === 'android' ?
+          this.renderBody() :
+          <KeyboardAvoidingView style={styles.viewContainer} behavior="padding">
+            {this.renderBody()}
+          </KeyboardAvoidingView>
+        }
+
+      </View>
+    )
+  }
+
+  renderBody = () => {
+    return (
+      <View style={styles.viewContainer}>
+        {/*List message*/}
+        <FlatList
+          inverted={true}
+          style={styles.viewContainer}
+          data={this.state.arrMessage}
+          renderItem={this.renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          contentContainerStyle={{paddingTop: 10, paddingBottom: 10}}
+        />
+
+        {/*Input*/}
+        <View style={styles.viewWrapInput}>
+          {/* Input field */}
+          <TextInput
+            underlineColorAndroid="rgba(0,0,0,0)"
+            style={styles.viewTextInput}
+            placeholder="Type your message..."
+            onChangeText={value => {
+              this.setState({currentMessage: value})
+            }}
+            value={this.state.currentMessage}
           />
 
-          {/*Input*/}
-          <View style={styles.viewWrapInput}>
-            {/* Input field */}
-            <TextInput
-              underlineColorAndroid="rgba(0,0,0,0)"
-              style={styles.viewTextInput}
-              placeholder="Type your message..."
-              onChangeText={value => {
-                this.setState({ currentMessage: value })
-              }}
-              value={this.state.currentMessage}
-            />
-
-            {/* Button send message */}
-            <TouchableOpacity onPress={this.sendMessage}>
-              <Image source={images.ic_send} style={styles.icSend} />
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+          {/* Button send message */}
+          <TouchableOpacity onPress={this.sendMessage}>
+            <Image source={images.ic_send} style={styles.icSend}/>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }

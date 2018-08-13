@@ -10,8 +10,10 @@ import { sendBird } from '../Root/RootContainer'
 export default class SettingsScreen extends Component {
   constructor (props) {
     super(props)
+    this.file = null
     this.state = {
       avatarSource: '',
+      profileUrl: null,
       username: '',
       isLoading: false
     }
@@ -40,6 +42,9 @@ export default class SettingsScreen extends Component {
         this.setState({
           avatarSource: source
         })
+
+        this.file = {uri: response.uri, name: response.fileName, type: response.type}
+
       }
     })
   }
@@ -47,7 +52,7 @@ export default class SettingsScreen extends Component {
   onBtnUpdatePress = () => {
     if (this.state.username.trim()) {
       this.setState({isLoading: true})
-      sendBird.updateCurrentUserInfo(this.state.username, null,
+      sendBird.updateCurrentUserInfoWithProfileImage(this.state.username, this.file,
         (response, error) => {
           if (!error) {
             this.writeDataLocal()
@@ -72,8 +77,12 @@ export default class SettingsScreen extends Component {
   readDataLocal = async () => {
     try {
       const value = await AsyncStorage.getItem('username')
+      const value2 = await AsyncStorage.getItem('profileUrl')
       if (value) {
-        this.setState({username: value})
+        this.setState({
+          username: value,
+          profileUrl: value2
+        })
       }
     } catch (error) {
       console.log(error)
@@ -97,7 +106,7 @@ export default class SettingsScreen extends Component {
               source={
                 this.state.avatarSource
                   ? this.state.avatarSource
-                  : null
+                  : {uri: this.state.profileUrl}
               }
             />
             <TouchableOpacity

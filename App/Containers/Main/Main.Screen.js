@@ -47,6 +47,7 @@ export default class MainScreen extends Component {
       email: '',
       isLoading: false,
     }
+    this.profileUrl = ''
   }
 
   componentDidMount () {
@@ -63,6 +64,7 @@ export default class MainScreen extends Component {
         if (error) {
           Toast.show(error.message)
         } else {
+          this.profileUrl = user.profileUrl
           this.writeDataLocal()
         }
       })
@@ -86,11 +88,13 @@ export default class MainScreen extends Component {
 
   writeDataLocal = async () => {
     try {
-      await AsyncStorage.setItem('email', this.state.email, this.onWriteLocalSuccess)
+      await AsyncStorage.setItem('email', this.state.email)
+      await AsyncStorage.setItem('profileUrl', this.profileUrl)
       currentEmail = this.state.email
     } catch (error) {
       Toast.show(error.message)
     }
+    this.onWriteLocalSuccess()
   }
 
   onWriteLocalSuccess = () => {
