@@ -48,8 +48,10 @@ export default StyleSheet.create({
     fontWeight: 'bold'
   },
   textInput: {
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 15,
+    marginRight: 15,
+    marginTop: 10,
+    marginBottom: 10,
     color: '#203152'
   },
   viewItemInput: {

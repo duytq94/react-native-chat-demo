@@ -42,6 +42,7 @@ export default StyleSheet.create({
     paddingBottom: 8,
     paddingLeft: 10,
     paddingRight: 10,
+    overflow: 'hidden'
   },
 
   // Message left
@@ -59,6 +60,7 @@ export default StyleSheet.create({
     paddingBottom: 8,
     paddingLeft: 10,
     paddingRight: 10,
+    overflow: 'hidden'
   },
   avatarItemLeft: {
     width: 30,

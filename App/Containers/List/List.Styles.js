@@ -82,8 +82,10 @@ export default StyleSheet.create({
     fontWeight: 'bold'
   },
   textInputDialog: {
-    marginLeft: 20,
-    marginRight: 20,
+    marginLeft: 25,
+    marginRight: 25,
+    marginTop: 10,
+    marginBottom: 10,
     color: '#203152',
   },
   viewUnderline: {
