@@ -38,11 +38,11 @@ export default class ChatScreen extends Component {
 
   componentWillMount () {
     BackHandler.addEventListener('hardwareBackPress', this.backPress)
-    sendBird.removeChannelHandler(UNIQUE_HANDLER_ID)
   }
 
   componentWillUnmount () {
     BackHandler.removeEventListener('hardwareBackPress', this.backPress)
+    sendBird.removeChannelHandler(UNIQUE_HANDLER_ID)
   }
 
   componentDidMount () {
