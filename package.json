@@ -84,7 +84,7 @@
     "ignite-vector-icons": "^1.1.0",
     "jest": "22.0.3",
     "mockery": "^2.1.0",
-    "open": "0.0.5",
+    "open": "6.0.0",
     "react-dom": "^16.7.0",
     "react-native-debugger-open": "^0.3.17",
     "react-test-renderer": "16.0.0",
