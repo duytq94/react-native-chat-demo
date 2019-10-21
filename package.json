@@ -37,7 +37,7 @@
     "format-json": "^1.0.3",
     "identity-obj-proxy": "^3.0.0",
     "prop-types": "^15.6.1",
-    "querystringify": "1.0.0",
+    "querystringify": "2.0.0",
     "ramda": "^0.25.0",
     "react": "16.2.0",
     "react-native": "0.54.2",
